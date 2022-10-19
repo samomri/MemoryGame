@@ -1,25 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/Header';
+import useAppState from './hooks/useAppState';
+
+import Cards  from './components/Cards';
 
 function App() {
+  const { handleClick, handleNewGame, wins, cards, pickOne, pickTwo, counter, start } = useAppState();
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header handleNewGame={handleNewGame} wins={wins} counter={counter}/>
+      <Cards cards={cards} handleClick={handleClick} pickOne={pickOne} pickTwo={pickTwo} start={start}/>
+    </>
   );
 }
 
