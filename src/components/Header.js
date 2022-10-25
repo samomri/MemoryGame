@@ -2,21 +2,12 @@ import { useEffect, useState } from 'react';
 import jwt_decode from "jwt-decode";
 
 //firestore
-import { initializeApp } from "firebase/app";
-import { getDoc, getFirestore } from "firebase/firestore";
+import { getDoc } from "firebase/firestore";
 import { doc,setDoc, collection, updateDoc,arrayUnion } from "firebase/firestore"; 
 
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: 'AIzaSyCBfWQ7U_mmvKMzwGcQgpH1C_dNnlzZajU',
-  authDomain: 'memorygame-cec19.firebaseapp.com',
-  projectId: 'memorygame-cec19',
-  storageBucket: 'memorygame-cec19.appspot.com',
-  messagingSenderId: '255426498689',
-  appId: '1:255426498689:web:7466b4f7847601de9e3d80'
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+//Databse
+import { db } from '../utilities/firestore';
+
 
 //Component
 const Header = ({ handleNewGame, wins ,setWins,counter, scoreArray }) => {
