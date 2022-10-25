@@ -1,16 +1,32 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect, useReducer } from "react";
 import shuffle from "../utilities/shuffle";
 import useAppBadge from "./useAppBadge";
 
+function playerCounterReducer (state, action) {
+    if(action.type === 'end'){
+        return state + (action.counter) 
+    }
+    return state - (action.counter)
+}
+function scoreArrayReducer (state, action) {
+    if(action.type === 'add'){
+        return [...state, {counter: action.score.counter,wins: action.score.wins}] 
+    }
+    return state
+}
+
 const useAppState = () => {
+    
     const [wins, setWins] = useState(0); // Win streak
     const [cards, setCards] = useState(shuffle); // Cards array from assets
     const [pickOne, setPickOne] = useState(null); // First selection
     const [pickTwo, setPickTwo] = useState(null); // Second selection
     const [disabled, setDisabled] = useState(false); // Delay handler
     const [setBadge, clearBadge] = useAppBadge(); // Handles app badge
-    const [counter, setCounter] = useState(16);//Click counter
+    const [counter, setCounter] = useState(0);//Click counter
     const [start,setStart] = useState(true)//initial card states
+    const [playerCounter, setPlayerCounter] = useReducer(playerCounterReducer,0)
+    const [scoreArray, setScoreArray] =useReducer(scoreArrayReducer,[])
 
     // Handle card selection
     const handleClick = (card) => {
@@ -28,11 +44,10 @@ const useAppState = () => {
 
     // Start over
     const handleNewGame = () => {
-    setWins(0);
     clearBadge();
     handleTurn();
     setCards(shuffle);
-    setCounter(16);
+    setCounter(0);
     setStart(true)
     };
 
@@ -45,7 +60,7 @@ const useAppState = () => {
         startTimer = setTimeout(() => {
         setStart(false)
         setDisabled(false)
-        }, 1000);
+        }, 2000);
     }
     return () => {
         clearTimeout(startTimer);
@@ -98,11 +113,13 @@ const useAppState = () => {
         setWins(wins + 1);
         setBadge();
         handleTurn();
+        setPlayerCounter({counter,type:'end'})
+        setScoreArray({type: 'add',score: {counter:counter,wins:wins+1}})
         setCards(shuffle);
-        setCounter(16);
+        setCounter(0);
     }
-    }, [cards, setBadge, wins]);
+    }, [cards, setBadge, wins,counter,scoreArray,playerCounter]);
 
-    return {handleClick,handleNewGame,handleTurn,wins,cards,pickOne,pickTwo,disabled,counter,start}
+    return {handleClick,handleNewGame,handleTurn,wins,cards,pickOne,pickTwo,disabled,counter,start,scoreArray,setWins}
 }
 export default useAppState
